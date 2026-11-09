@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>GéoMaurice — Admin</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body class="admin-body">
+    <main class="admin">
+        <header class="admin-header">
+            <div>
+                <h1>Espace admin</h1>
+                <p class="subtitle">Signalements citoyens GéoMaurice</p>
+            </div>
+            <nav>
+                <a href="/">← Carte</a>
+                <button id="logout" class="secondary-btn hidden" type="button">Se déconnecter</button>
+            </nav>
+        </header>
+
+        <form id="login-form" class="admin-card login">
+            <label for="password">Mot de passe admin</label>
+            <input id="password" type="password" autocomplete="current-password" required>
+            <p id="login-error" class="form-error" role="alert"></p>
+            <button class="close-btn" type="submit">Se connecter</button>
+        </form>
+
+        <section id="dashboard" class="hidden">
+            <div class="admin-stats" id="stats"></div>
+            <p class="hint">Un signalement reste affiché sur la carte jusqu'à son retrait ici. Le retrait supprime
+                définitivement le signalement et sa photo.</p>
+            <div class="admin-card table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Photo</th>
+                            <th>Position</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="rows"></tbody>
+                </table>
+                <p id="empty" class="hint hidden">Aucun signalement pour le moment.</p>
+            </div>
+        </section>
+    </main>
+    <script type="module" src="/admin.js"></script>
+</body>
+
+</html>

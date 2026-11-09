@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GéoMaurice — Observatoire citoyen</title>
+    <link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Observatoire<br><span>Résilience Côtière</span></h1>
+                <p class="subtitle">Île Maurice</p>
+            </div>
+
+            <div class="charts-container">
+                <div class="chart-wrapper clickable-chart">
+                    <canvas id="povertyChart"></canvas>
+                </div>
+                <div class="chart-wrapper clickable-chart">
+                    <canvas id="floodChart"></canvas>
+                </div>
+            </div>
+
+            <div id="analysis-panel" class="analysis-panel hidden">
+                <h3 id="analysis-title">Analyse</h3>
+                <p id="analysis-text">Cliquez sur un graphique pour voir l'analyse détaillée.</p>
+                <button id="close-analysis" class="close-btn">Fermer</button>
+            </div>
+
+            <div class="controls">
+                <h3>Signalements citoyens</h3>
+                <label class="toggle"><input type="checkbox" checked id="layer-reports"><span
+                        class="slider"></span><span class="label-text">Signalements (<span
+                            id="reports-count">0</span>)</span></label>
+                <ul id="reports-legend" class="legend"></ul>
+
+                <h3>RSE & Climat</h3>
+                <label class="toggle"><input type="checkbox" checked id="layer-poverty"><span
+                        class="slider"></span><span class="label-text">Poches de pauvreté</span></label>
+                <label class="toggle"><input type="checkbox" checked id="layer-flood"><span
+                        class="slider"></span><span class="label-text">Zones inondables</span></label>
+                <label class="toggle"><input type="checkbox" checked id="layer-coastal"><span
+                        class="slider"></span><span class="label-text">Risques côtiers</span></label>
+                <label class="toggle"><input type="checkbox" checked id="layer-green"><span
+                        class="slider"></span><span class="label-text">Énergie renouvelable</span></label>
+                <label class="toggle"><input type="checkbox" checked id="layer-history"><span
+                        class="slider"></span><span class="label-text">Historique crues</span></label>
+
+                <h3>Santé & Social</h3>
+                <label class="toggle"><input type="checkbox" id="layer-health"><span
+                        class="slider"></span><span class="label-text">Hôpitaux & cliniques</span></label>
+                <label class="toggle"><input type="checkbox" id="layer-pharmacy"><span
+                        class="slider"></span><span class="label-text">Pharmacies</span></label>
+                <label class="toggle"><input type="checkbox" id="layer-social"><span
+                        class="slider"></span><span class="label-text">Centres sociaux</span></label>
+
+                <h3>Sécurité</h3>
+                <label class="toggle"><input type="checkbox" id="layer-emergency"><span
+                        class="slider"></span><span class="label-text">Police & pompiers</span></label>
+                <label class="toggle"><input type="checkbox" id="layer-danger"><span
+                        class="slider"></span><span class="label-text">Baignade dangereuse</span></label>
+
+                <h3>Économie & Tourisme</h3>
+                <label class="toggle"><input type="checkbox" id="layer-tourist"><span
+                        class="slider"></span><span class="label-text">Sites touristiques</span></label>
+
+                <h3>Administration</h3>
+                <label class="toggle"><input type="checkbox" id="layer-districts"><span
+                        class="slider"></span><span class="label-text">Districts</span></label>
+            </div>
+
+            <footer class="sidebar-footer">
+                <p>Données : GeoPortal, Data.GovMU, StatsMU, BRGM (2025) + contributions citoyennes</p>
+                <p><a href="/sources.md">📚 Sources complètes</a> · <a href="/admin">Espace admin</a></p>
+            </footer>
+        </aside>
+
+        <main class="map-container">
+            <div id="map"></div>
+            <button id="open-report" class="report-btn" type="button">＋ Signaler</button>
+
+            <!-- Panneau de signalement citoyen -->
+            <section id="report-panel" class="report-panel hidden" aria-labelledby="report-title">
+                <header class="report-head">
+                    <h2 id="report-title">Nouveau signalement</h2>
+                    <button id="close-report" class="icon-btn" type="button" aria-label="Fermer">✕</button>
+                </header>
+
+                <form id="report-form" novalidate>
+                    <fieldset>
+                        <legend>1. Où ?</legend>
+                        <p id="location-status" class="hint">Touchez la carte pour placer le point, ou utilisez
+                            votre position.</p>
+                        <button id="use-location" class="secondary-btn" type="button">📍 Utiliser ma position</button>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>2. Quoi ?</legend>
+                        <label for="category">Type de problème</label>
+                        <select id="category" name="category" required>
+                            <option value="">— Choisir —</option>
+                        </select>
+
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="3" maxlength="500" required
+                            placeholder="Ex. : la route est inondée depuis ce matin, 30 cm d'eau"></textarea>
+                        <p class="hint"><span id="desc-count">0</span>/500</p>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>3. Photo (facultative)</legend>
+                        <input id="photo" type="file" accept="image/*" capture="environment">
+                        <div id="photo-preview" class="photo-preview hidden">
+                            <img id="photo-img" alt="Aperçu de la photo">
+                            <p class="hint" id="photo-info"></p>
+                            <button id="remove-photo" class="link-btn" type="button">Retirer la photo</button>
+                        </div>
+                    </fieldset>
+
+                    <p class="privacy">🔒 Envoi anonyme : aucun nom ni compte. Les métadonnées de la photo (dont la
+                        position GPS de l'appareil) sont supprimées. Évitez de photographier des personnes ou des
+                        plaques d'immatriculation.</p>
+
+                    <p id="report-error" class="form-error" role="alert"></p>
+                    <button id="submit-report" class="close-btn submit" type="submit">Envoyer le signalement</button>
+                </form>
+            </section>
+
+            <div id="toast" class="toast hidden" role="status"></div>
+        </main>
+    </div>
+
+    <script src="/vendor/leaflet/leaflet.js"></script>
+    <script src="/vendor/protomaps/protomaps-leaflet.js"></script>
+    <script src="/vendor/chart.js/chart.umd.js"></script>
+    <script src="/data.js"></script>
+    <script type="module" src="/app.js"></script>
+</body>
+
+</html>

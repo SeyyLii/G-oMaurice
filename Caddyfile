@@ -1,0 +1,12 @@
+# Reverse proxy de production : HTTPS automatique (Let's Encrypt) pour le domaine
+# défini par DOMAIN dans le fichier .env.
+{$DOMAIN} {
+	encode zstd gzip
+
+	# Refuse en amont les envois trop gros (photo 1,5 Mo max côté application)
+	request_body {
+		max_size 3MB
+	}
+
+	reverse_proxy app:3000
+}

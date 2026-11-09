@@ -1,0 +1,10 @@
+node_modules
+data
+test
+.env
+.git
+*.zip
+pmtiles
+pmtiles.exe
+public/tiles/*.pmtiles
+public/tiles/*.part

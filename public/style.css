@@ -1,0 +1,401 @@
+:root {
+    --primary-color: #006994;
+    --accent-color: #00b4d8;
+    --bg-dark: #0f172a;
+    --text-light: #f8fafc;
+    --text-dim: #94a3b8;
+    --glass-bg: rgba(15, 23, 42, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --success: #10b981;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+
+.sidebar {
+    width: 350px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border-right: 1px solid var(--glass-border);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    background: linear-gradient(to right, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.sidebar-header h1 span {
+    color: var(--accent-color);
+    -webkit-text-fill-color: var(--accent-color);
+}
+
+.subtitle {
+    font-size: 0.875rem;
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+
+.stats-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.stat-card h3 {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-light);
+}
+
+.stat-value.warning {
+    color: var(--warning);
+}
+
+.stat-value.danger {
+    color: var(--danger);
+}
+
+.stat-value.success {
+    color: var(--success);
+}
+
+.stat-value.info {
+    color: var(--accent-color);
+}
+
+.stat-desc {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    margin-top: 0.25rem;
+}
+
+
+.charts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.chart-wrapper {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 1rem;
+    border: 1px solid var(--glass-border);
+}
+
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.controls h3 {
+    font-size: 0.875rem;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.toggle {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 0.75rem;
+}
+
+.toggle input {
+    display: none;
+}
+
+.slider {
+    width: 40px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    position: relative;
+    transition: 0.3s;
+}
+
+.slider::before {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--text-dim);
+    top: 2px;
+    left: 2px;
+    transition: 0.3s;
+}
+
+.toggle input:checked+.slider {
+    background-color: var(--primary-color);
+}
+
+.toggle input:checked+.slider::before {
+    transform: translateX(20px);
+    background-color: #fff;
+}
+
+.label-text {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+
+.map-container {
+    flex: 1;
+    position: relative;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-align: center;
+}
+
+
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column-reverse;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: 40%;
+        border-right: none;
+        border-top: 1px solid var(--glass-border);
+    }
+
+    .map-container {
+        height: 60%;
+    }
+}
+
+
+.analysis-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid var(--accent-color);
+    border-radius: 16px;
+    padding: 2rem;
+    z-index: 2000;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(12px);
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
+    visibility: visible;
+}
+
+.analysis-panel.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -40%);
+    pointer-events: none;
+}
+
+.analysis-panel h3 {
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.analysis-panel p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+}
+
+.clickable-chart,
+.clickable-card {
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.clickable-chart:hover,
+.clickable-card:hover {
+    transform: scale(1.02);
+    border-color: var(--accent-color);
+}
+
+.close-btn {
+    background: var(--primary-color);
+    border: none;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.close-btn:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+/* ==========================================================================
+   GéoMaurice Citizen — ajouts 2026
+   ========================================================================== */
+.hidden:not(.analysis-panel) { display: none !important; }
+
+a { color: var(--accent-color); }
+.sidebar-footer p + p { margin-top: 0.5rem; }
+
+.legend { list-style: none; display: grid; gap: 0.3rem; font-size: 0.8rem; color: var(--text-dim); margin: -0.25rem 0 0.5rem 3.25rem; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 0.45rem; vertical-align: -1px; border: 1px solid rgba(255,255,255,.4); }
+
+.leaflet-popup-content p { margin: 0.5rem 0; line-height: 1.4; }
+.popup-photo { display: block; width: 100%; height: auto; max-height: 220px; object-fit: cover; border-radius: 6px; margin-top: 0.5rem; }
+
+/* Bouton « Signaler » */
+.report-btn {
+    position: absolute; left: 50%; bottom: 36px; transform: translateX(-50%); z-index: 1500;
+    background: var(--accent-color); color: #04222e; border: none; border-radius: 999px;
+    padding: 0.9rem 1.6rem; font: inherit; font-weight: 700; font-size: 1rem; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+}
+.report-btn:hover { filter: brightness(1.1); }
+
+/* Panneau de signalement */
+.report-panel {
+    position: absolute; top: 20px; left: 20px; z-index: 2100; width: min(380px, calc(100% - 40px));
+    max-height: calc(100% - 40px); overflow-y: auto;
+    background: var(--bg-dark); border: 1px solid var(--accent-color); border-radius: 14px;
+    padding: 1.25rem; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+.report-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+.report-head h2 { font-size: 1.1rem; color: var(--accent-color); }
+.report-panel fieldset { border: none; border-top: 1px solid var(--glass-border); padding: 0.75rem 0; display: grid; gap: 0.5rem; }
+.report-panel legend { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); padding-right: 0.5rem; }
+.report-panel label { font-size: 0.85rem; color: var(--text-dim); }
+.report-panel select, .report-panel textarea, .report-panel input[type=file], .admin input[type=password] {
+    width: 100%; font: inherit; font-size: 1rem; color: var(--text-light);
+    background: rgba(255, 255, 255, 0.06); border: 1px solid var(--glass-border); border-radius: 8px; padding: 0.6rem;
+}
+.report-panel select option { background: var(--bg-dark); }
+.report-panel textarea { resize: vertical; min-height: 4.5rem; }
+.hint { font-size: 0.8rem; color: var(--text-dim); line-height: 1.4; }
+.hint.ok { color: var(--success); }
+.privacy { font-size: 0.78rem; line-height: 1.45; color: var(--text-dim); background: rgba(255,255,255,0.04); border-radius: 8px; padding: 0.6rem 0.75rem; margin: 0.5rem 0; }
+.form-error { color: #fca5a5; font-size: 0.85rem; min-height: 1.1em; margin: 0.25rem 0; }
+.photo-preview img { width: 100%; max-height: 180px; object-fit: cover; border-radius: 8px; }
+.submit { width: 100%; padding: 0.9rem; font-size: 1rem; }
+.submit:disabled { opacity: 0.6; cursor: wait; }
+
+.icon-btn { background: none; border: none; color: var(--text-dim); font-size: 1.2rem; cursor: pointer; padding: 0.25rem 0.5rem; }
+.icon-btn:hover { color: var(--text-light); }
+.secondary-btn {
+    background: transparent; color: var(--text-light); border: 1px solid var(--accent-color); border-radius: 8px;
+    padding: 0.6rem 1rem; font: inherit; font-weight: 600; cursor: pointer;
+}
+.secondary-btn:hover { background: rgba(0, 180, 216, 0.12); }
+.link-btn { background: none; border: none; color: var(--accent-color); font: inherit; font-size: 0.85rem; cursor: pointer; padding: 0; text-decoration: underline; }
+.danger-btn { background: transparent; border: 1px solid var(--danger); color: #fca5a5; border-radius: 6px; padding: 0.4rem 0.8rem; font: inherit; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
+.danger-btn[data-action=confirm] { background: var(--danger); color: #fff; }
+
+.toast {
+    position: absolute; left: 50%; top: 20px; transform: translateX(-50%); z-index: 2200;
+    background: var(--success); color: #032b1f; font-weight: 600; padding: 0.75rem 1.25rem; border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); max-width: calc(100% - 40px); text-align: center;
+}
+
+@media (max-width: 768px) {
+    /* Feuille du bas : laisse le haut de la carte visible pour placer le point */
+    .report-panel { position: fixed; top: auto; bottom: 0; left: 0; width: 100%; max-height: 58vh; border-radius: 14px 14px 0 0; }
+    .report-btn { bottom: 20px; }
+}
+
+/* Espace admin */
+.admin-body { overflow: auto; height: auto; min-height: 100vh; }
+.admin { max-width: 1100px; margin: 0 auto; padding: 2rem 16px; display: grid; gap: 1.5rem; }
+.admin-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+.admin-header nav { display: flex; gap: 1rem; align-items: center; }
+.admin-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.25rem; }
+.login { max-width: 360px; display: grid; gap: 0.6rem; }
+.login label { color: var(--text-dim); font-size: 0.9rem; }
+.admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 0.75rem; }
+.table-wrap { overflow-x: auto; }
+.admin table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.admin th { text-align: left; color: var(--text-dim); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.5rem; border-bottom: 1px solid var(--glass-border); }
+.admin td { padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--glass-border); vertical-align: middle; }
+.admin td.desc { max-width: 340px; line-height: 1.4; }
+.thumb { width: 56px; height: 56px; object-fit: cover; border-radius: 6px; display: block; }
+
+/* Leaflet (2026) */
+.leaflet-container { background: #aad3df; font-family: inherit; }
+.tiles-dark { filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9); }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--bg-dark); color: var(--text-light); }
+.leaflet-popup-content { margin: 12px 14px; line-height: 1.4; }
+.leaflet-container a.leaflet-popup-close-button { color: var(--text-dim); }
+.picking, .picking .leaflet-interactive { cursor: crosshair !important; }
+.report-pin span {
+    display: block; width: 28px; height: 28px; background: var(--accent-color); border: 3px solid #fff;
+    border-radius: 50% 50% 50% 0; transform: rotate(-45deg); box-shadow: 0 3px 8px rgba(0,0,0,.4);
+}

@@ -1,0 +1,52 @@
+# GéoMaurice Citizen — Docker Compose
+#
+# En local        : docker compose up -d --build          → http://localhost:3000
+# En production   : docker compose --profile prod up -d --build
+#                   (ajoute Caddy : HTTPS automatique sur le domaine DOMAIN du .env)
+# Fond de carte   : docker compose run --rm app npm run tiles   (une fois)
+
+name: geomaurice
+
+services:
+  app:
+    build: .
+    image: geomaurice-citizen:latest
+    init: true                       # arrêt propre du processus Node
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      PORT: "3000"
+      DATA_DIR: /app/data
+    volumes:
+      - data:/app/data               # base SQLite + photos : À SAUVEGARDER
+      - tiles:/app/public/tiles      # fond de carte maurice.pmtiles
+    ports:
+      # Accessible uniquement depuis la machine elle-même.
+      # En production, le public passe par Caddy (ports 80/443).
+      - "127.0.0.1:${APP_PORT:-3000}:3000"
+
+  caddy:
+    image: caddy:2-alpine
+    profiles: ["prod"]
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data             # certificats HTTPS
+      - caddy_config:/config
+
+volumes:
+  data:
+  tiles:
+  caddy_data:
+  caddy_config:
